@@ -3,24 +3,30 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Compte à Rebours</title>
+    <title>Compte à Rebours - Mystère</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&display=swap');
+        body { font-family: 'JetBrains+Mono', monospace; }
+    </style>
 </head>
-<body class="relative bg-black text-white flex items-center justify-center min-h-screen bg-cover bg-center bg-no-repeat" 
-      style="background-image: url('SA400279.JPG');">
+<body class="relative bg-black text-white flex items-center justify-center min-h-screen overflow-hidden">
 
-    <div class="absolute inset-0 bg-black/60 z-0"></div>
+    <div class="absolute inset-0 bg-cover bg-center bg-no-repeat scale-110 blur-md" 
+         style="background-image: url('SA400279.JPG');"></div>
 
-    <div class="relative z-10 text-center px-4">
-        <h1 class="text-xl md:text-3xl mb-8 font-light tracking-[0.2em] uppercase opacity-90">
+    <div class="absolute inset-0 bg-black/50 z-0"></div>
+
+    <div class="relative z-10 text-center px-6 py-12 backdrop-blur-sm bg-black/20 rounded-2xl border border-white/10 shadow-2xl">
+        <h1 class="text-lg md:text-2xl mb-10 font-light tracking-[0.3em] text-gray-300">
             48°52'16.4"N 2°30'07.6"E
         </h1>
-        <div id="timer" class="text-5xl md:text-8xl font-mono font-bold flex gap-4 justify-center">
+        
+        <div id="timer" class="flex gap-6 md:gap-12 justify-center items-center">
             </div>
     </div>
 
     <script>
-        // Ta date cible : 20 mars 2026 à 21h30
         const targetDate = new Date("March 20, 2026 21:30:00").getTime();
         
         function updateTimer() {
@@ -28,7 +34,7 @@
             const diff = targetDate - now;
             
             if (diff <= 0) {
-                document.getElementById('timer').innerHTML = "ARRIVÉE";
+                document.getElementById('timer').innerHTML = "<span class='text-4xl tracking-widest'>COORDONNÉES ATTEINTES</span>";
                 return;
             }
 
@@ -37,16 +43,19 @@
             const m = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
             const s = Math.floor((diff % (1000 * 60)) / 1000);
             
-            // Formatage 00 pour plus de propreté
-            const format = (num) => String(num).padStart(2, '0');
+            const format = (n) => String(n).padStart(2, '0');
 
-            document.getElementById('timer').innerHTML = `
-                <div class="flex flex-col"><span class="leading-none">${format(d)}</span><span class="text-xs uppercase font-light mt-2">Jours</span></div>
-                <div class="flex flex-col"><span class="leading-none">${format(h)}</span><span class="text-xs uppercase font-light mt-2">Hrs</span></div>
-                <div class="flex flex-col"><span class="leading-none">${format(m)}</span><span class="text-xs uppercase font-light mt-2">Min</span></div>
-                <div class="flex flex-col"><span class="leading-none">${format(s)}</span><span class="text-xs uppercase font-light mt-2">Sec</span></div>
-            `;
+            const createBlock = (val, label) => `
+                <div class="flex flex-col">
+                    <span class="text-4xl md:text-7xl font-bold tabular-nums">${format(val)}</span>
+                    <span class="text-[10px] md:text-xs uppercase tracking-[0.2em] text-gray-400 mt-2">${label}</span>
+                </div>`;
+
+            document.getElementById('timer').innerHTML = 
+                createBlock(d, 'Jours') + createBlock(h, 'Heures') + 
+                createBlock(m, 'Min') + createBlock(s, 'Sec');
         }
+
         setInterval(updateTimer, 1000);
         updateTimer();
     </script>
